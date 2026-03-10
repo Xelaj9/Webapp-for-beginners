@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เรียนรู้เว็บพัฒนา — ฉบับเด็ก 5 ขวบก็เข้าใจ</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&family=Kanit:wght@700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:    #faf9f6;
+  --s1:    #ffffff;
+  --s2:    #f4f2ee;
+  --border:#e8e4dc;
+  --text:  #1a1814;
+  --muted: #7a7468;
+  --muted2:#b0aa9e;
+
+  --html:  #e8622a;
+  --css:   #2979d4;
+  --js:    #c9a000;
+  --react: #00b4d8;
+  --server:#7c3aed;
+  --db:    #16a34a;
+  --api:   #db2777;
+  --host:  #0f766e;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Sarabun',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  line-height:1.7;
+}
+
+/* ─── PROGRESS ─── */
+#pb{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--html),var(--css),var(--js));z-index:999;transition:width .1s;}
+
+/* ─── HERO ─── */
+.hero{
+  background:#1a1814;
+  padding:80px 24px 60px;
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 600px 400px at 20% 50%,rgba(232,98,42,.15),transparent 70%),
+    radial-gradient(ellipse 500px 300px at 80% 30%,rgba(41,121,212,.15),transparent 70%);
+}
+.hero-tag{
+  display:inline-block;
+  border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.6);
+  font-size:11px;letter-spacing:3px;text-transform:uppercase;font-weight:700;
+  padding:6px 18px;border-radius:100px;margin-bottom:28px;
+  position:relative;
+}
+.hero h1{
+  font-family:'Kanit',sans-serif;
+  font-size:clamp(36px,8vw,76px);font-weight:800;
+  color:#fff;line-height:1.05;margin-bottom:20px;
+  position:relative;
+}
+.hero h1 span{
+  background:linear-gradient(90deg,var(--html),var(--js),var(--react));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero p{color:rgba(255,255,255,.55);font-size:17px;max-width:480px;margin:0 auto 40px;position:relative;}
+
+/* quiz strip */
+.quiz-strip{
+  display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative;
+}
+.qs{
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.7);
+  padding:8px 18px;border-radius:100px;font-size:13px;font-weight:600;
+  cursor:pointer;transition:.2s;
+}
+.qs:hover,.qs.active{background:rgba(255,255,255,.15);color:#fff;}
+
+/* ─── NAV ─── */
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(250,249,246,.95);backdrop-filter:blur(12px);
+  border-bottom:2px solid var(--border);
+}
+.nav-inner{
+  display:flex;max-width:1100px;margin:0 auto;
+  padding:0 20px;overflow-x:auto;scrollbar-width:none;
+}
+.nav-inner::-webkit-scrollbar{display:none;}
+.ntab{
+  flex-shrink:0;padding:14px 18px;
+  border:none;background:transparent;
+  color:var(--muted);font-family:'Sarabun',sans-serif;
+  font-size:13px;font-weight:700;cursor:pointer;
+  border-bottom:3px solid transparent;
+  transition:.15s;white-space:nowrap;
+}
+.ntab:hover{color:var(--text);}
+.ntab.active{color:var(--text);border-bottom-color:var(--text);}
+
+/* ─── WRAP ─── */
+.wrap{max-width:1100px;margin:0 auto;padding:50px 24px 120px;}
+.sec{display:none;animation:fadeUp .35s ease;}
+.sec.active{display:block;}
+
+/* ─── CONCEPT CARD ─── */
+.concept{
+  border-radius:20px;border:2px solid;
+  margin-bottom:32px;
+  overflow:hidden;
+}
+.concept-head{
+  padding:28px 32px;
+  display:flex;align-items:flex-start;gap:20px;
+}
+.concept-emoji{
+  font-size:52px;flex-shrink:0;
+  line-height:1;margin-top:4px;
+}
+.concept-intro h2{
+  font-family:'Kanit',sans-serif;font-size:28px;font-weight:800;
+  margin-bottom:6px;
+}
+.concept-intro .tagline{font-size:16px;font-weight:600;margin-bottom:10px;}
+.concept-intro p{font-size:15px;color:var(--muted);line-height:1.8;}
+
+.concept-body{
+  padding:0 32px 28px;
+}
+
+/* color themes */
+.t-html{border-color:var(--html);background:#fffaf8;}
+.t-html .concept-head{background:linear-gradient(135deg,#fff5f1,#fff);}
+.t-html .concept-intro h2{color:var(--html);}
+
+.t-css{border-color:var(--css);background:#f8fbff;}
+.t-css .concept-head{background:linear-gradient(135deg,#f0f7ff,#fff);}
+.t-css .concept-intro h2{color:var(--css);}
+
+.t-js{border-color:var(--js);background:#fffdf0;}
+.t-js .concept-head{background:linear-gradient(135deg,#fffbdb,#fff);}
+.t-js .concept-intro h2{color:var(--js);}
+
+.t-react{border-color:var(--react);background:#f0fcff;}
+.t-react .concept-head{background:linear-gradient(135deg,#e0f8ff,#fff);}
+.t-react .concept-intro h2{color:var(--react);}
+
+.t-server{border-color:var(--server);background:#faf5ff;}
+.t-server .concept-head{background:linear-gradient(135deg,#f3e8ff,#fff);}
+.t-server .concept-intro h2{color:var(--server);}
+
+.t-db{border-color:var(--db);background:#f0fdf4;}
+.t-db .concept-head{background:linear-gradient(135deg,#dcfce7,#fff);}
+.t-db .concept-intro h2{color:var(--db);}
+
+.t-api{border-color:var(--api);background:#fff0f9;}
+.t-api .concept-head{background:linear-gradient(135deg,#fce7f3,#fff);}
+.t-api .concept-intro h2{color:var(--api);}
+
+.t-host{border-color:var(--host);background:#f0fdfa;}
+.t-host .concept-head{background:linear-gradient(135deg,#ccfbf1,#fff);}
+.t-host .concept-intro h2{color:var(--host);}
+
+/* ─── ANALOGY BOX ─── */
+.analogy{
+  display:flex;gap:16px;align-items:flex-start;
+  background:#fff;border:2px dashed var(--border);
+  border-radius:14px;padding:20px;margin:14px 0;
+}
+.analogy-icon{font-size:36px;flex-shrink:0;}
+.analogy-body strong{font-size:15px;font-weight:700;display:block;margin-bottom:6px;}
+.analogy-body p{font-size:14px;color:var(--muted);line-height:1.8;}
+.analogy-body .hl{color:var(--text);font-weight:600;}
+
+/* ─── VISUAL DEMO ─── */
+.demo-split{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+.demo-pane{border-radius:12px;overflow:hidden;border:1.5px solid var(--border);}
+.demo-pane-label{
+  padding:8px 14px;font-size:11px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  border-bottom:1.5px solid var(--border);
+}
+.demo-pane-body{padding:16px;font-size:13px;}
+
+/* house demo */
+.house-demo{
+  padding:20px;background:#f8f4ee;border-radius:12px;
+  text-align:center;margin:10px 0;
+  border:2px solid var(--border);
+}
+.house{display:inline-block;position:relative;}
+.house-roof{
+  width:0;height:0;
+  border-left:60px solid transparent;
+  border-right:60px solid transparent;
+  border-bottom:50px solid #8B5E3C;
+  margin:0 auto;
+}
+.house-body{
+  width:120px;height:80px;
+  background:#D4A574;
+  margin:0 auto;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.house-door{
+  width:30px;height:50px;
+  background:#5C3317;
+  position:absolute;bottom:0;
+}
+.house-window{
+  width:25px;height:25px;
+  background:#87CEEB;border:3px solid #5C3317;
+  position:absolute;top:15px;
+}
+.house-window.left{left:15px;}
+.house-window.right{right:15px;}
+
+/* code demo box */
+.codeblock{
+  background:#1a1814;border-radius:12px;overflow:hidden;margin:10px 0;
+}
+.cb-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px;background:rgba(255,255,255,.04);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.cb-lang{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
+.cb-html{color:var(--html);}
+.cb-css{color:var(--css);}
+.cb-js{color:var(--js);}
+.cb-dots{display:flex;gap:5px;}
+.cb-dot{width:10px;height:10px;border-radius:50%;}
+.cb-body{
+  padding:16px 18px;
+  font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.9;
+  overflow-x:auto;white-space:pre;
+  color:#d4cfca;
+}
+.tg{color:#e8622a;} .at{color:#c9a000;}
+.st{color:#6ec98e;} .vl{color:#79b8f7;}
+.kw{color:#c792ea;} .fn{color:#82aaff;}
+.cm{color:#5a544e;} .nm{color:#f78c6c;}
+
+/* ─── COMPARISON TABLE ─── */
+.cmp-table{
+  width:100%;border-collapse:separate;border-spacing:0;
+  background:#fff;border:2px solid var(--border);
+  border-radius:16px;overflow:hidden;margin:14px 0;
+  font-size:14px;
+}
+.cmp-table th{
+  padding:14px 18px;
+  border-bottom:2px solid var(--border);
+  font-size:12px;letter-spacing:1px;text-transform:uppercase;
+  font-weight:700;color:var(--muted);text-align:left;
+}
+.cmp-table td{
+  padding:14px 18px;
+  border-bottom:1px solid var(--border);
+  vertical-align:top;
+}
+.cmp-table tr:last-child td{border-bottom:none;}
+.cmp-table tr:hover td{background:#faf9f6;}
+.em{font-size:20px;}
+
+/* ─── STEP SEQUENCE ─── */
+.seq{
+  display:flex;flex-direction:column;gap:0;
+  border:2px solid var(--border);border-radius:16px;
+  overflow:hidden;margin:14px 0;
+}
+.seq-item{
+  display:flex;gap:16px;align-items:flex-start;
+  padding:18px 20px;
+  border-bottom:1px solid var(--border);
+  background:#fff;transition:.15s;
+}
+.seq-item:last-child{border-bottom:none;}
+.seq-item:hover{background:#faf9f6;}
+.seq-n{
+  width:32px;height:32px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:13px;flex-shrink:0;
+  font-family:'JetBrains Mono',monospace;
+}
+.seq-item strong{display:block;font-size:15px;margin-bottom:3px;}
+.seq-item p{font-size:13px;color:var(--muted);line-height:1.7;}
+
+/* ─── INFO CARD ─── */
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:14px 0;}
+.info-card{
+  background:#fff;border:2px solid var(--border);
+  border-radius:14px;padding:20px;
+}
+.info-card .ic-icon{font-size:32px;margin-bottom:10px;}
+.info-card h3{font-size:15px;font-weight:700;margin-bottom:6px;}
+.info-card p{font-size:13px;color:var(--muted);line-height:1.7;}
+
+/* ─── CALLOUT ─── */
+.note{
+  display:flex;gap:14px;align-items:flex-start;
+  border-radius:12px;padding:16px 20px;margin:14px 0;
+}
+.note-i{font-size:22px;flex-shrink:0;}
+.note-b strong{display:block;font-size:15px;font-weight:700;margin-bottom:4px;}
+.note-b p{font-size:14px;line-height:1.75;color:var(--muted);}
+.note-green{background:#f0fdf4;border:1.5px solid #bbf7d0;}
+.note-green .note-b strong{color:var(--db);}
+.note-yellow{background:#fffbeb;border:1.5px solid #fde68a;}
+.note-yellow .note-b strong{color:#b45309;}
+.note-blue{background:#eff6ff;border:1.5px solid #bfdbfe;}
+.note-blue .note-b strong{color:var(--css);}
+.note-orange{background:#fff7ed;border:1.5px solid #fed7aa;}
+.note-orange .note-b strong{color:var(--html);}
+
+/* ─── BIG FLOW ─── */
+.big-flow{
+  background:#fff;border:2px solid var(--border);
+  border-radius:16px;padding:28px;margin:14px 0;
+}
+.bf-row{display:flex;gap:0;align-items:center;flex-wrap:wrap;justify-content:center;}
+.bf-box{
+  flex-shrink:0;min-width:120px;
+  border-radius:12px;border:2px solid;
+  padding:16px 14px;text-align:center;
+  background:#fff;
+}
+.bf-arrow{color:var(--muted2);font-size:22px;padding:0 8px;flex-shrink:0;}
+.bf-icon{font-size:28px;margin-bottom:6px;}
+.bf-title{font-size:13px;font-weight:700;}
+.bf-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* ─── QUIZ ─── */
+.quiz-box{
+  background:#fff;border:2px solid var(--border);
+  border-radius:16px;padding:24px;margin:20px 0;
+}
+.quiz-q{font-size:17px;font-weight:700;margin-bottom:16px;}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.qopt{
+  padding:12px 16px;border-radius:10px;
+  border:2px solid var(--border);background:#faf9f6;
+  cursor:pointer;font-size:14px;font-weight:600;
+  transition:.15s;text-align:left;font-family:'Sarabun',sans-serif;
+}
+.qopt:hover{border-color:var(--muted2);}
+.qopt.correct{background:#f0fdf4;border-color:var(--db);color:var(--db);}
+.qopt.wrong{background:#fff1f2;border-color:#f43f5e;color:#f43f5e;}
+.quiz-feedback{
+  margin-top:14px;padding:12px 16px;border-radius:10px;
+  font-size:14px;display:none;
+}
+.quiz-feedback.show{display:block;}
+.qf-correct{background:#f0fdf4;color:var(--db);border:1.5px solid #bbf7d0;}
+.qf-wrong{background:#fff1f2;color:#f43f5e;border:1.5px solid #fecdd3;}
+
+/* ─── SECTION DIVIDER ─── */
+.sh{
+  font-size:11px;letter-spacing:3px;text-transform:uppercase;
+  font-weight:700;color:var(--muted);
+  margin:40px 0 18px;padding-bottom:10px;
+  border-bottom:2px solid var(--border);
+}
+
+/* ─── ANIM ─── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(14px);}
+  to{opacity:1;transform:translateY(0);}
+}
+@keyframes bounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-6px);}
+}
+.bounce{animation:bounce 2s infinite;}
+
+/* ─── LIVE HTML DEMO ─── */
+.live-demo{
+  background:#fff;border:2px solid var(--border);
+  border-radius:12px;overflow:hidden;margin:14px 0;
+}
+.ld-header{
+  padding:10px 16px;background:#f4f2ee;
+  border-bottom:1.5px solid var(--border);
+  font-size:12px;font-weight:700;color:var(--muted);
+  display:flex;align-items:center;gap:8px;
+}
+.ld-body{padding:16px;}
+
+/* responsive */
+@media(max-width:600px){
+  .demo-split{grid-template-columns:1fr;}
+  .quiz-options{grid-template-columns:1fr;}
+  .bf-arrow{transform:rotate(90deg);padding:4px 0;}
+  .bf-row{flex-direction:column;align-items:center;}
+}
+</style>
+</head>
+<body>
+<div id="pb"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">📚 ฉบับเด็ก 5 ขวบก็เข้าใจ</div>
+  <h1>เรียนรู้<br><span>เว็บแอพ</span><br>จากศูนย์</h1>
+  <p>ไม่รู้โค้ดมาก่อนเลยก็ไม่เป็นไร เราจะอธิบายทุกอย่าง<br>ด้วยเปรียบเทียบที่เข้าใจง่ายที่สุดเท่าที่จะทำได้</p>
+  <div class="quiz-strip">
+    <div class="qs active" onclick="show('s-intro',this)">🌍 เว็บคืออะไร</div>
+    <div class="qs" onclick="show('s-html',this)">🏗️ HTML</div>
+    <div class="qs" onclick="show('s-css',this)">🎨 CSS</div>
+    <div class="qs" onclick="show('s-js',this)">⚡ JavaScript</div>
+    <div class="qs" onclick="show('s-react',this)">⚛️ React</div>
+    <div class="qs" onclick="show('s-back',this)">🖥️ Backend</div>
+    <div class="qs" onclick="show('s-db',this)">🗄️ Database</div>
+    <div class="qs" onclick="show('s-api',this)">🔌 API</div>
+    <div class="qs" onclick="show('s-deploy',this)">🚀 Deploy</div>
+    <div class="qs" onclick="show('s-quiz',this)">🧠 ทดสอบ</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-inner">
+    <button class="ntab active" onclick="show('s-intro',this)">🌍 เว็บคืออะไร</button>
+    <button class="ntab" onclick="show('s-html',this)">🏗️ HTML</button>
+    <button class="ntab" onclick="show('s-css',this)">🎨 CSS</button>
+    <button class="ntab" onclick="show('s-js',this)">⚡ JavaScript</button>
+    <button class="ntab" onclick="show('s-react',this)">⚛️ React</button>
+    <button class="ntab" onclick="show('s-back',this)">🖥️ Backend</button>
+    <button class="ntab" onclick="show('s-db',this)">🗄️ Database</button>
+    <button class="ntab" onclick="show('s-api',this)">🔌 API</button>
+    <button class="ntab" onclick="show('s-deploy',this)">🚀 Deploy</button>
+    <button class="ntab" onclick="show('s-quiz',this)">🧠 ทดสอบ</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ══════════ INTRO ══════════ -->
+<div class="sec active" id="s-intro">
+  <div class="concept t-html" style="border-color:#e8e4dc">
+    <div class="concept-head">
+      <div class="concept-emoji bounce">🌍</div>
+      <div class="concept-intro">
+        <h2 style="color:var(--text)">เว็บไซต์คืออะไรกันแน่?</h2>
+        <div class="tagline">ก่อนเรียนรู้ ต้องเข้าใจภาพรวมก่อน</div>
+        <p>เว็บไซต์คือไฟล์ที่เก็บอยู่บนคอมพิวเตอร์เครื่องหนึ่ง (เรียกว่า Server) และเมื่อคุณพิมพ์ URL ในเบราว์เซอร์ เบราว์เซอร์จะไปขอไฟล์นั้นมาแสดงให้คุณดู</p>
+      </div>
+    </div>
+    <div class="concept-body">
+      <div class="analogy">
+        <div class="analogy-icon">📺</div>
+        <div class="analogy-body">
+          <strong>เปรียบเหมือน: ร้านพิซซ่า</strong>
+          <p>
+            <span class="hl">คุณ (เบราว์เซอร์)</span> โทรสั่งพิซซ่า → 
+            <span class="hl">ร้าน (Server)</span> รับออเดอร์ → 
+            <span class="hl">ทำพิซซ่า (ส่งไฟล์)</span> → 
+            <span class="hl">ส่งมาให้คุณ (แสดงหน้าเว็บ)</span>
+            <br><br>
+            ทุกครั้งที่คุณคลิก link หรือพิมพ์ URL คุณกำลัง "โทรสั่งพิซซ่า" นั่นเอง
+          </p>
+        </div>
+      </div>
+
+      <div class="sh">เว็บแอพสร้างจากอะไรบ้าง?</div>
+
+      <div class="big-flow">
+        <div class="bf-row">
+          <div class="bf-box" style="border-color:var(--html)">
+            <div class="bf-icon">🏗️</div>
+            <div class="bf-title" style="color:var(--html)">HTML</div>
+            <div class="bf-sub">โครงสร้าง</div>
+          </div>
+          <div class="bf-arrow">+</div>
+          <div class="bf-box" style="border-color:var(--css)">
+            <div class="bf-icon">🎨</div>
+            <div class="bf-title" style="color:var(--css)">CSS</div>
+            <div class="bf-sub">หน้าตา</div>
+          </div>
+          <div class="bf-arrow">+</div>
+          <div class="bf-box" style="border-color:var(--js)">
+            <div class="bf-icon">⚡</div>
+            <div class="bf-title" style="color:var(--js)">JavaScript</div>
+            <div class="bf-sub">การทำงาน</div>
+          </div>
+          <div class="bf-arrow">=</div>
+          <div class="bf-box" style="border-color:#10b981;background:#f0fdf4">
+            <div class="bf-icon">🌐</div>
+            <div class="bf-title" style="color:#10b981">เว็บแอพ</div>
+            <div class="bf-sub">ใช้งานได้จริง</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="analogy">
+        <div class="analogy-icon">🏠</div>
+        <div class="analogy-body">
+          <strong>เปรียบเหมือน: การสร้างบ้าน</strong>
+          <p>
+            <span class="hl">HTML</span> = โครงสร้างบ้าน (เสา คาน ผนัง ห้อง)<br>
+            <span class="hl">CSS</span> = การตกแต่ง (สีทา เฟอร์นิเจอร์ ม่าน พรม)<br>
+            <span class="hl">JavaScript</span> = ระบบในบ้าน (ไฟ แอร์ กุญแจอัตโนมัติ กริ่งประตู)
+          </p>
+        </div>
+      </div>
+
+      <div class="sh">ภาษาคอมพิวเตอร์คืออะไร?</div>
+      <div class="analogy">
+        <div class="analogy-icon">🗣️</div>
+        <div class="analogy-body">
+          <strong>ภาษาคอมพิวเตอร์ = วิธีสื่อสารกับคอมพิวเตอร์</strong>
+          <p>
+            คอมพิวเตอร์ไม่เข้าใจภาษาไทยหรืออังกฤษ มันเข้าใจแค่ "ภาษาโปรแกรมมิ่ง" เท่านั้น<br><br>
+            เหมือนกับที่คุณต้องพูดภาษาญี่ปุ่นกับคนญี่ปุ่น ถ้าอยากให้คอมพิวเตอร์ทำอะไร คุณต้องพูด "ภาษา" ที่มันเข้าใจ — นั่นคือ HTML, CSS, JavaScript นั่นเอง
+          </p>
+        </div>
+      </div>
+
+      <div class="note note-green">
+        <div class="note-i">💡</div>
+        <div class="note-b">
+          <strong>ข่าวดี!</strong>
+          <p>วันนี้ Claude พูดภาษาเหล่านี้ได้แทนคุณ! คุณแค่บอกว่าต้องการอะไร Claude จะเขียนโค้ดให้ คุณไม่จำเป็นต้องเรียนโค้ดก็ใช้ Claude สร้างเว็บแอพได้ แต่ถ้าเข้าใจพื้นฐาน จะสั่ง Claude ได้แม่นยำขึ้นมาก</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ HTML ══════════ -->
+<div class="sec" id="s-html">
+  <div class="concept t-html">
+    <div class="concept-head">
+      <div class="concept-emoji bounce">🏗️</div>
+      <div class="concept-intro">
+        <h2>HTML</h2>
+        <div class="tagline" style="color:var(--html)">HyperText Markup Language — โครงกระดูกของเว็บ</div>
+        <p>HTML คือภาษาที่บอกเบราว์เซอร์ว่า <strong>"หน้าเว็บมีอะไรบ้าง"</strong> — มีหัวข้อ มีข้อความ มีรูป มีปุ่ม อยู่ที่ไหน</p>
+      </div>
+    </div>
+    <div class="concept-body">
+
+      <div class="analogy">
+        <div class="analogy-icon">📋</div>
+        <div class="analogy-body">
+          <strong>เปรียบเหมือน: แบบแปลนบ้าน</strong>
+          <p>แบบแปลนบอกว่า <span class="hl">"ห้องนอนอยู่ซ้าย ห้องน้ำอยู่ขวา ประตูอยู่กลาง"</span> แต่ยังไม่ได้บอกว่าสีผนังเป็นอะไร<br>
+          HTML ก็เหมือนกัน — บอกแค่ว่า <span class="hl">"มีหัวข้ออยู่บนสุด มีรูปตรงกลาง มีปุ่มด้านล่าง"</span> เท่านั้น</p>
+        </div>
+      </div>
+
+      <div class="sh">HTML ทำงานอย่างไร — Tag คืออะไร?</div>
+
+      <div class="analogy">
+        <div class="analogy-icon">🏷️</div>
+        <div class="analogy-body">
+          <strong>Tag = ป้ายชื่อที่ติดให้เนื้อหา</strong>
+          <p>
+            ลองนึกถึงกล่องพัสดุ เราติด <span class="hl">ป้าย "เปราะบาง"</span> เพื่อบอกว่ากล่องนี้พิเศษ<br>
+            HTML Tag ก็เหมือนกัน — ติดป้าย <span class="hl">&lt;h1&gt;</span> บอกว่า "นี่คือหัวข้อใหญ่"<br>
+            ติดป้าย <span class="hl">&lt;p&gt;</span> บอกว่า "นี่คือย่อหน้าข้อความ"<br>
+            ทุก tag มีเปิด <span class="hl">&lt;xxx&gt;</span> และปิด <span class="hl">&lt;/xxx&gt;</span> เหมือนวงเล็บ
+          </p>
+        </div>
+      </div>
+
+      <div class="demo-split">
+        <div>
+          <div class="codeblock">
+            <div class="cb-header">
+              <div class="cb-dots"><div class="cb-dot" style="background:#ff6b6b"></div><div class="cb-dot" style="background:#ffd93d"></div><div class="cb-dot" style="background:#6bcb77"></div></div>
+              <div class="cb-lang cb-html">โค้ด HTML</div>
+            </div>
+            <div class="cb-body"><tg>&lt;h1&gt;</tg>สวัสดีครับ!<tg>&lt;/h1&gt;</tg>
+
+<tg>&lt;p&gt;</tg>ฉันชื่อสมชาย อายุ 25 ปี<tg>&lt;/p&gt;</tg>
+
+<tg>&lt;img</tg> <at>src=</at><st>"cat.jpg"</st><tg>&gt;</tg>
+
+<tg>&lt;button&gt;</tg>คลิกที่นี่<tg>&lt;/button&gt;</tg>
+
+<tg>&lt;a</tg> <at>href=</at><st>"google.com"</st><tg>&gt;</tg>
+  ไปกูเกิล
+<tg>&lt;/a&gt;</tg></div>
+          </div>
+        </div>
+        <div>
+          <div class="live-demo">
+            <div class="ld-header">👁️ ผลลัพธ์ที่เห็นในเบราว์เซอร์</div>
+            <div class="ld-body">
+              <h1 style="font-size:22px;margin-bottom:8px;">สวัสดีครับ!</h1>
+              <p style="margin-bottom:10px;font-size:14px;color:#555">ฉันชื่อสมชาย อายุ 25 ปี</p>
+              <div style="width:60px;height:40px;background:#e8e4dc;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:10px;">🐱</div>
+              <button style="padding:8px 16px;background:#e8622a;color:white;border:none;border-radius:6px;cursor:pointer;font-family:Sarabun;font-weight:600;margin-right:8px;">คลิกที่นี่</button>
+              <a href="#" style="color:#2979d4;font-size:14px;">ไปกูเกิล</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sh">Tag ที่ใช้บ่อยที่สุด</div>
+      <table class="cmp-table">
+        <thead><tr><th>Tag</th><th>เปรียบเหมือน</th><th>หน้าที่</th><th>ตัวอย่าง</th></tr></thead>
+        <tbody>
+          <tr><td><code style="font-family:JetBrains Mono;background:#fff5f1;color:var(--html);padding:2px 8px;border-radius:4px">&lt;h1&gt;–&lt;h6&gt;</code></td><td>📰 หัวข่าว</td><td>หัวข้อขนาดต่างๆ (h1=ใหญ่สุด)</td><td>ชื่อบทความ</td></tr>
+          <tr><td><code style="font-family:JetBrains Mono;background:#fff5f1;color:var(--html);padding:2px 8px;border-radius:4px">&lt;p&gt;</code></td><td>📝 กระดาษ</td><td>ย่อหน้าข้อความ</td><td>คำอธิบาย</td></tr>
+          <tr><td><code style="font-family:JetBrains Mono;background:#fff5f1;color:var(--html);padding:2px 8px;border-radius:4px">&lt;img&gt;</code></td><td>🖼️ กรอบรูป</td><td>แสดงรูปภาพ</td><td>โลโก้, ภาพประกอบ</td></tr>
+          <tr><td><code style="font-family:JetBrains Mono;background:#fff5f1;color:var(--html);padding:2px 8px;border-radius:4px">&lt;button&gt;</code></td><td>🔘 ปุ่มกด</td><td>ปุ่มที่คลิกได้</td><td>Submit, Delete</td></tr>
+          <tr><td><code style="font-family:JetBrains Mono;background:#fff5f1;color:var(--html);padding:2px 8px;border-radius:4px">&lt;input&gt;</code></td><td>📥 กล่องรับของ</td><td>ช่องกรอกข้อมูล</td><td>ชื่อ, อีเมล, รหัสผ่าน</td></tr>
+          <tr><td><code style="font-family:JetBrains Mono;background:#fff5f1;color:var(--html);padding:2px 8px;border-radius:4px">&lt;div&gt;</code></td><td>📦 กล่อง</td><td>กล่องจัดกลุ่มเนื้อหา</td><td>Card, Section, Container</td></tr>
+          <tr><td><code style="font-family:JetBrains Mono;background:#fff5f1;color:var(--html);padding:2px 8px;border-radius:4px">&lt;a&gt;</code></td><td>🔗 ลูกศรชี้</td><td>ลิงก์ไปหน้าอื่น</td><td>เมนู, Read more</td></tr>
+          <tr><td><code style="font-family:JetBrains Mono;background:#fff5f1;color:var(--html);padding:2px 8px;border-radius:4px">&lt;ul&gt;&lt;li&gt;</code></td><td>📋 รายการ</td><td>รายการ bullet points</td><td>เมนูอาหาร, รายการงาน</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note note-orange">
+        <div class="note-i">🤖</div>
+        <div class="note-b">
+          <strong>วิธีสั่ง Claude เรื่อง HTML</strong>
+          <p>แค่บอกว่า "มีอะไร" บน "ตำแหน่งไหน" — เช่น <em>"สร้างหน้าเว็บที่มีหัวข้อใหญ่ตรงกลาง มีรูปข้างล่าง มีปุ่มสีเขียว"</em> Claude จะเขียน HTML ให้เอง ไม่ต้องรู้ tag ก็ได้</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ CSS ══════════ -->
+<div class="sec" id="s-css">
+  <div class="concept t-css">
+    <div class="concept-head">
+      <div class="concept-emoji bounce">🎨</div>
+      <div class="concept-intro">
+        <h2>CSS</h2>
+        <div class="tagline" style="color:var(--css)">Cascading Style Sheets — ช่างแต่งหน้าของเว็บ</div>
+        <p>CSS บอกเบราว์เซอร์ว่า <strong>"แต่ละอย่างในเว็บหน้าตาเป็นยังไง"</strong> — สีอะไร ขนาดเท่าไร อยู่ตรงไหน มีเงาไหม</p>
+      </div>
+    </div>
+    <div class="concept-body">
+      <div class="analogy">
+        <div class="analogy-icon">💄</div>
+        <div class="analogy-body">
+          <strong>เปรียบเหมือน: ช่างแต่งตัวให้นักแสดง</strong>
+          <p>HTML สร้าง "นักแสดง" (ข้อความ, ปุ่ม, รูป) ออกมาก่อน<br>
+          CSS คือ "ช่างแต่งหน้า" ที่มาแต่งให้ดูดี — <span class="hl">ใส่ชุด, แต่งหน้า, ทำผม</span><br>
+          ถ้าไม่มี CSS เว็บจะดูธรรมดาเหมือนกระดาษข้อความล้วน ไม่มีสีไม่มีดีไซน์</p>
+        </div>
+      </div>
+
+      <div class="sh">CSS ทำงานอย่างไร?</div>
+      <div class="analogy">
+        <div class="analogy-icon">🎯</div>
+        <div class="analogy-body">
+          <strong>เลือก → แต่ง (Selector → Property)</strong>
+          <p>
+            CSS ทำงาน 2 ขั้น:<br>
+            1. <span class="hl">เลือกว่าจะแต่งอะไร</span> เช่น "ปุ่มทุกปุ่ม" หรือ "หัวข้อใหญ่"<br>
+            2. <span class="hl">บอกว่าแต่งยังไง</span> เช่น "ทำให้สีแดง" หรือ "ขนาดตัวอักษร 20px"
+          </p>
+        </div>
+      </div>
+
+      <div class="demo-split">
+        <div>
+          <div class="codeblock">
+            <div class="cb-header">
+              <div class="cb-dots"><div class="cb-dot" style="background:#ff6b6b"></div><div class="cb-dot" style="background:#ffd93d"></div><div class="cb-dot" style="background:#6bcb77"></div></div>
+              <div class="cb-lang cb-css">โค้ด CSS</div>
+            </div>
+            <div class="cb-body"><cm>/* แต่ง h1 ทุกอัน */</cm>
+<fn>h1</fn> {
+  <at>color</at>: <vl>royalblue</vl>;
+  <at>font-size</at>: <nm>32px</nm>;
+  <at>text-align</at>: <vl>center</vl>;
+}
+
+<cm>/* แต่งปุ่มทุกปุ่ม */</cm>
+<fn>button</fn> {
+  <at>background</at>: <vl>#e8622a</vl>;
+  <at>color</at>: <vl>white</vl>;
+  <at>padding</at>: <nm>12px 24px</nm>;
+  <at>border-radius</at>: <nm>8px</nm>;
+  <at>border</at>: <vl>none</vl>;
+}
+
+<cm>/* เปลี่ยนเมื่อ hover */</cm>
+<fn>button:hover</fn> {
+  <at>background</at>: <vl>#c0471a</vl>;
+}</div>
+          </div>
+        </div>
+        <div>
+          <div class="live-demo">
+            <div class="ld-header">👁️ ก่อน CSS vs หลัง CSS</div>
+            <div class="ld-body" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div>
+                <p style="font-size:11px;color:#999;margin-bottom:8px;font-weight:700;">❌ ไม่มี CSS</p>
+                <h3 style="font-family:serif;font-size:14px;margin-bottom:6px">หัวข้อ</h3>
+                <p style="font-size:12px;margin-bottom:8px">ข้อความธรรมดา</p>
+                <button style="font-size:12px">ปุ่ม</button>
+              </div>
+              <div>
+                <p style="font-size:11px;color:#999;margin-bottom:8px;font-weight:700;">✅ มี CSS</p>
+                <h3 style="color:royalblue;font-size:16px;font-weight:800;margin-bottom:6px">หัวข้อ</h3>
+                <p style="font-size:12px;margin-bottom:8px;color:#555">ข้อความสวยงาม</p>
+                <button style="background:#e8622a;color:white;padding:6px 14px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-family:Sarabun">ปุ่มสวย</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sh">Property CSS ที่ใช้บ่อย</div>
+      <table class="cmp-table">
+        <thead><tr><th>Property</th><th>เปรียบเหมือน</th><th>หน้าที่</th></tr></thead>
+        <tbody>
+          <tr><td><code style="font-family:JetBrains Mono;background:#f0f7ff;color:var(--css);padding:2px 8px;border-radius:4px">color</code></td><td>🖌️ สีหมึก</td><td>สีของตัวอักษร</td></tr>
+          <tr><td><code style="font-family:JetBrains Mono;background:#f0f7ff;color:var(--css);padding:2px 8px;border-radius:4px">background</code></td><td>🎨 สีพื้น</td><td>สีพื้นหลัง</td></tr>
+          <tr><td><code style="font-family:JetBrains Mono;background:#f0f7ff;color:var(--css);padding:2px 8px;border-radius:4px">font-size</code></td><td>📏 ไม้บรรทัด</td><td>ขนาดตัวอักษร</td></tr>
+          <tr><td><code style="font-family:JetBrains Mono;background:#f0f7ff;color:var(--css);padding:2px 8px;border-radius:4px">padding</code></td><td>🛋️ เบาะรอง</td><td>ระยะห่างข้างใน element</td></tr>
+          <tr><td><code style="font-family:JetBrains Mono;background:#f0f7ff;color:var(--css);padding:2px 8px;border-radius:4px">margin</code></td><td>📐 ระยะห่าง</td><td>ระยะห่างระหว่าง element</td></tr>
+          <tr><td><code style="font-family:JetBrains Mono;background:#f0f7ff;color:var(--css);padding:2px 8px;border-radius:4px">border-radius</code></td><td>🔘 มุมกลม</td><td>ทำให้มุมโค้งมน</td></tr>
+          <tr><td><code style="font-family:JetBrains Mono;background:#f0f7ff;color:var(--css);padding:2px 8px;border-radius:4px">display:flex</code></td><td>🧩 ตัวต่อ</td><td>จัดวาง element แนวนอน/ตั้ง</td></tr>
+          <tr><td><code style="font-family:JetBrains Mono;background:#f0f7ff;color:var(--css);padding:2px 8px;border-radius:4px">animation</code></td><td>🎬 ภาพยนตร์</td><td>ทำให้ element เคลื่อนไหว</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note note-blue">
+        <div class="note-i">🤖</div>
+        <div class="note-b">
+          <strong>วิธีสั่ง Claude เรื่อง CSS</strong>
+          <p>อธิบายดีไซน์ที่ต้องการด้วยคำพูดธรรมดา เช่น <em>"ทำให้ปุ่มสีส้ม มีเงา มุมมน ตัวอักษรสีขาว ใหญ่ขึ้นเมื่อ hover"</em> หรือ <em>"อยากได้ดีไซน์แบบ dark mode เหมือน Notion"</em> — Claude เข้าใจได้</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ JS ══════════ -->
+<div class="sec" id="s-js">
+  <div class="concept t-js">
+    <div class="concept-head">
+      <div class="concept-emoji bounce">⚡</div>
+      <div class="concept-intro">
+        <h2>JavaScript</h2>
+        <div class="tagline" style="color:var(--js)">ภาษาที่ทำให้เว็บ "มีชีวิต" และโต้ตอบได้</div>
+        <p>JavaScript คือสิ่งที่ทำให้เว็บ <strong>ทำอะไรได้</strong> — เมื่อกดปุ่มแล้วมีอะไรเกิดขึ้น เมื่อพิมพ์แล้วข้อมูลเปลี่ยน เมื่อเลื่อนหน้าแล้วมี animation</p>
+      </div>
+    </div>
+    <div class="concept-body">
+
+      <div class="analogy">
+        <div class="analogy-icon">🤖</div>
+        <div class="analogy-body">
+          <strong>เปรียบเหมือน: ระบบในบ้านอัจฉริยะ</strong>
+          <p>
+            ถ้าบ้านมีแค่ HTML+CSS — มันเหมือนรูปถ่ายบ้าน สวยงาม แต่ทำอะไรไม่ได้<br>
+            JavaScript คือ <span class="hl">ระบบ Smart Home</span> — กดปุ่มไฟติด, เปิดประตูอัตโนมัติ, แอร์ปรับตัวเอง<br>
+            ทำให้บ้าน (เว็บ) จาก "รูปถ่าย" กลายเป็น "ของจริงที่ใช้งานได้"
+          </p>
+        </div>
+      </div>
+
+      <div class="sh">JavaScript ทำอะไรได้บ้าง?</div>
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="ic-icon">👆</div>
+          <h3>ตอบสนองต่อการคลิก</h3>
+          <p>เมื่อกดปุ่ม → เพิ่มรายการ / ลบข้อมูล / เปิด popup</p>
+        </div>
+        <div class="info-card">
+          <div class="ic-icon">🔢</div>
+          <h3>คำนวณตัวเลข</h3>
+          <p>บวก ลบ คูณ หาร เปอร์เซ็นต์ภาษี คำนวณราคา</p>
+        </div>
+        <div class="info-card">
+          <div class="ic-icon">💾</div>
+          <h3>จำข้อมูล</h3>
+          <p>บันทึกสิ่งที่ผู้ใช้ทำ เก็บไว้ใน localStorage</p>
+        </div>
+        <div class="info-card">
+          <div class="ic-icon">🌐</div>
+          <h3>ดึงข้อมูลจากอินเทอร์เน็ต</h3>
+          <p>เรียก API เพื่อดึงข่าว ราคาหุ้น สภาพอากาศ</p>
+        </div>
+        <div class="info-card">
+          <div class="ic-icon">✨</div>
+          <h3>Animation</h3>
+          <p>ทำให้ element เคลื่อนไหว ค่อยๆ ปรากฏ หมุน</p>
+        </div>
+        <div class="info-card">
+          <div class="ic-icon">✅</div>
+          <h3>ตรวจสอบข้อมูล</h3>
+          <p>เช็คว่ากรอก email ถูกต้องไหม รหัสผ่านยาวพอไหม</p>
+        </div>
+      </div>
+
+      <div class="sh">แนวคิดพื้นฐาน JavaScript</div>
+
+      <div class="seq">
+        <div class="seq-item">
+          <div class="seq-n" style="background:#fffbdb;color:var(--js)">📦</div>
+          <div>
+            <strong>Variable (ตัวแปร) — กล่องเก็บของ</strong>
+            <p>เหมือนกล่องมีชื่อ เก็บข้อมูลได้ เช่น กล่องชื่อ "score" เก็บคะแนน 100 คะแนน ถ้าทำคะแนนได้เพิ่มก็แค่เปลี่ยนเลขในกล่อง ไม่ต้องสร้างกล่องใหม่</p>
+          </div>
+        </div>
+        <div class="seq-item">
+          <div class="seq-n" style="background:#fffbdb;color:var(--js)">🔧</div>
+          <div>
+            <strong>Function (ฟังก์ชัน) — สูตรอาหาร</strong>
+            <p>เหมือนสูตรอาหารที่เขียนไว้ครั้งหนึ่ง แล้วทำซ้ำได้ตลอด เช่น สูตร "ทอดไข่" บอกขั้นตอนไว้ พอจะทอดไข่แค่ "เรียกสูตร" ไม่ต้องคิดใหม่ทุกครั้ง</p>
+          </div>
+        </div>
+        <div class="seq-item">
+          <div class="seq-n" style="background:#fffbdb;color:var(--js)">🔍</div>
+          <div>
+            <strong>If/Else — การตัดสินใจ</strong>
+            <p>เหมือนสัญญาณไฟจราจร ถ้าไฟเขียว = ไปได้, ถ้าไฟแดง = หยุด JavaScript ก็ตัดสินใจแบบนี้ เช่น "ถ้าคะแนน ≥ 50 → ผ่าน ถ้าไม่ → ไม่ผ่าน"</p>
+          </div>
+        </div>
+        <div class="seq-item">
+          <div class="seq-n" style="background:#fffbdb;color:var(--js)">🔄</div>
+          <div>
+            <strong>Loop (ลูป) — การทำซ้ำ</strong>
+            <p>เหมือนนับลูกแก้ว แทนที่จะนับทีละเม็ด สั่งว่า "วนซ้ำจนครบ 100 เม็ด" JavaScript ก็ทำซ้ำๆ ได้โดยไม่เหนื่อย</p>
+          </div>
+        </div>
+        <div class="seq-item">
+          <div class="seq-n" style="background:#fffbdb;color:var(--js)">📋</div>
+          <div>
+            <strong>Array (อาเรย์) — รายการ</strong>
+            <p>เหมือนรายการซื้อของ เก็บหลายอย่างในที่เดียว เช่น ["นม", "ไข่", "ขนมปัง"] แทนที่จะสร้างตัวแปรแยกสำหรับของแต่ละชิ้น</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="codeblock">
+        <div class="cb-header">
+          <div class="cb-dots"><div class="cb-dot" style="background:#ff6b6b"></div><div class="cb-dot" style="background:#ffd93d"></div><div class="cb-dot" style="background:#6bcb77"></div></div>
+          <div class="cb-lang cb-js">ตัวอย่าง JavaScript — อ่านแล้วเข้าใจเลย</div>
+        </div>
+        <div class="cb-body"><cm>// 📦 Variable — เก็บชื่อ</cm>
+<kw>let</kw> <fn>name</fn> = <st>"สมชาย"</st>;
+<kw>let</kw> <fn>score</fn> = <nm>85</nm>;
+
+<cm>// 🔧 Function — ตรวจผลสอบ</cm>
+<kw>function</kw> <fn>checkResult</fn>(<fn>score</fn>) {
+  <kw>if</kw> (<fn>score</fn> >= <nm>50</nm>) {
+    <kw>return</kw> <st>"✅ ผ่าน!"</st>;
+  } <kw>else</kw> {
+    <kw>return</kw> <st>"❌ ไม่ผ่าน"</st>;
+  }
+}
+
+<cm>// 👆 เมื่อกดปุ่ม → เรียก function</cm>
+<fn>button</fn>.addEventListener(<st>"click"</st>, () => {
+  <fn>alert</fn>(<fn>checkResult</fn>(<fn>score</fn>));
+  <cm>// ผลลัพธ์: ✅ ผ่าน!</cm>
+});</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ REACT ══════════ -->
+<div class="sec" id="s-react">
+  <div class="concept t-react">
+    <div class="concept-head">
+      <div class="concept-emoji bounce">⚛️</div>
+      <div class="concept-intro">
+        <h2>React</h2>
+        <div class="tagline" style="color:var(--react)">Library JavaScript ที่ทำให้สร้างแอพซับซ้อนได้ง่ายขึ้น</div>
+        <p>React คือ "เครื่องมือพิเศษ" ที่สร้างมาจาก JavaScript อีกทีหนึ่ง ทำให้สร้างแอพขนาดใหญ่ที่มีการโต้ตอบซับซ้อนได้โดยไม่งง</p>
+      </div>
+    </div>
+    <div class="concept-body">
+
+      <div class="analogy">
+        <div class="analogy-icon">🧱</div>
+        <div class="analogy-body">
+          <strong>เปรียบเหมือน: ตัวต่อ LEGO</strong>
+          <p>
+            JavaScript ปกติเหมือนดินน้ำมัน — ปั้นได้ทุกอย่างแต่ยุ่งยาก<br>
+            React เหมือน <span class="hl">LEGO</span> — มีชิ้นส่วนสำเร็จรูป (Component) ต่อเข้าหากันได้<br>
+            สร้าง "ปุ่ม" ครั้งเดียว แล้วใช้ซ้ำได้ 100 ที่ — เปลี่ยนที่เดียวเปลี่ยนทุกที่
+          </p>
+        </div>
+      </div>
+
+      <div class="sh">React vs JavaScript ธรรมดา ต่างกันอย่างไร?</div>
+
+      <table class="cmp-table">
+        <thead><tr><th></th><th>JavaScript ธรรมดา</th><th>React</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>เปรียบเหมือน</td>
+            <td>🧱 ก่ออิฐทีละก้อน</td>
+            <td>🏗️ ใช้แผงสำเร็จรูป</td>
+          </tr>
+          <tr>
+            <td>ความยุ่งยาก</td>
+            <td>ต้องจัดการ DOM เอง</td>
+            <td>React จัดการ DOM ให้อัตโนมัติ</td>
+          </tr>
+          <tr>
+            <td>การใช้ซ้ำ</td>
+            <td>Copy-paste โค้ด</td>
+            <td>สร้าง Component ใช้ซ้ำได้</td>
+          </tr>
+          <tr>
+            <td>แอพขนาดใหญ่</td>
+            <td>จัดการยาก โค้ดพันกัน</td>
+            <td>แยกส่วนชัดเจน จัดการง่าย</td>
+          </tr>
+          <tr>
+            <td>เหมาะกับ</td>
+            <td>แอพเล็ก ง่ายๆ</td>
+            <td>แอพกลาง-ใหญ่ ซับซ้อน</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="analogy">
+        <div class="analogy-icon">🃏</div>
+        <div class="analogy-body">
+          <strong>Component คืออะไร? เหมือนไพ่หนึ่งใบ</strong>
+          <p>
+            ลองนึกถึงเกมไพ่ แต่ละ "ใบไพ่" มีหน้าตาและการทำงานของตัวเอง<br>
+            React Component ก็เหมือนกัน — <span class="hl">&lt;ProductCard /&gt;</span> คือ "ใบไพ่สินค้า" ที่สร้างครั้งเดียวแล้ววางได้ทุกที่<br>
+            อยากแสดงสินค้า 100 ชิ้น ก็แค่ใช้ &lt;ProductCard /&gt; 100 ครั้ง
+          </p>
+        </div>
+      </div>
+
+      <div class="note note-blue">
+        <div class="note-i">❓</div>
+        <div class="note-b">
+          <strong>ต้องรู้ React ก่อนสร้างแอพด้วย Claude ไหม?</strong>
+          <p>ไม่จำเป็น! Claude สร้าง React ให้ได้เลย แค่บอกว่า "สร้างด้วย React" Claude จะจัดการทุกอย่าง ความรู้ React ช่วยให้คุณ debug และขอแก้ไขได้ตรงจุดขึ้น แต่ไม่ใช่เงื่อนไขบังคับ</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ BACKEND ══════════ -->
+<div class="sec" id="s-back">
+  <div class="concept t-server">
+    <div class="concept-head">
+      <div class="concept-emoji bounce">🖥️</div>
+      <div class="concept-intro">
+        <h2>Backend (Server-side)</h2>
+        <div class="tagline" style="color:var(--server)">ส่วนที่ทำงานอยู่ "หลังม่าน" — ผู้ใช้มองไม่เห็น</div>
+        <p>Backend คือโค้ดที่รันอยู่บน Server ทำหน้าที่ <strong>ประมวลผลข้อมูล, จัดการ database, ตรวจสอบสิทธิ์</strong> ก่อนส่งผลลัพธ์กลับมาให้ Frontend แสดง</p>
+      </div>
+    </div>
+    <div class="concept-body">
+      <div class="analogy">
+        <div class="analogy-icon">🍳</div>
+        <div class="analogy-body">
+          <strong>เปรียบเหมือน: ครัวของร้านอาหาร</strong>
+          <p>
+            <span class="hl">Frontend</span> = หน้าร้าน (โต๊ะ เก้าอี้ เมนู) — ลูกค้ามองเห็น<br>
+            <span class="hl">Backend</span> = ครัว — ลูกค้ามองไม่เห็น แต่ทำอาหารอยู่<br>
+            ลูกค้าสั่งอาหาร (Frontend ส่ง request) → พ่อครัวทำอาหาร (Backend ประมวลผล) → เสิร์ฟมา (ส่งข้อมูลกลับ)
+          </p>
+        </div>
+      </div>
+
+      <div class="sh">Frontend vs Backend ต่างกันอย่างไร?</div>
+      <table class="cmp-table">
+        <thead><tr><th></th><th>🖼️ Frontend</th><th>⚙️ Backend</th></tr></thead>
+        <tbody>
+          <tr><td>รันที่ไหน</td><td>เบราว์เซอร์ของผู้ใช้</td><td>Server ของเรา</td></tr>
+          <tr><td>ผู้ใช้มองเห็น?</td><td>✅ เห็นทุกอย่าง</td><td>❌ มองไม่เห็น</td></tr>
+          <tr><td>ภาษาที่ใช้</td><td>HTML, CSS, JS</td><td>Python, Node.js, PHP</td></tr>
+          <tr><td>หน้าที่</td><td>แสดงผล รับ input</td><td>ประมวลผล เก็บข้อมูล</td></tr>
+          <tr><td>ตัวอย่าง</td><td>ปุ่ม Log in</td><td>ตรวจ password ถูกหรือไม่</td></tr>
+        </tbody>
+      </table>
+
+      <div class="sh">เมื่อไรต้องใช้ Backend?</div>
+      <div class="info-grid">
+        <div class="info-card" style="border-color:#f3e8ff">
+          <div class="ic-icon">🔐</div>
+          <h3>ระบบ Login</h3>
+          <p>ตรวจ username/password ต้องไม่ให้คนอื่นดู → ต้องใช้ Backend</p>
+        </div>
+        <div class="info-card" style="border-color:#f3e8ff">
+          <div class="ic-icon">💳</div>
+          <h3>ชำระเงิน</h3>
+          <p>ส่งข้อมูลบัตร → ประมวลผล → ยืนยันการจ่าย → ต้องใช้ Backend</p>
+        </div>
+        <div class="info-card" style="border-color:#f3e8ff">
+          <div class="ic-icon">📧</div>
+          <h3>ส่ง Email</h3>
+          <p>แอพส่งอีเมล notification → ต้องใช้ Backend</p>
+        </div>
+        <div class="info-card" style="border-color:#f3e8ff">
+          <div class="ic-icon">👥</div>
+          <h3>หลายผู้ใช้</h3>
+          <p>เก็บข้อมูลของผู้ใช้หลายคน แชร์ข้อมูลกัน → ต้องใช้ Backend</p>
+        </div>
+      </div>
+
+      <div class="note note-yellow">
+        <div class="note-i">💡</div>
+        <div class="note-b">
+          <strong>แอพง่ายๆ ไม่ต้องมี Backend!</strong>
+          <p>To-do list ส่วนตัว, Calculator, Quiz, Dashboard แสดงข้อมูล — แค่ Frontend + localStorage ก็พอ Backend จำเป็นเฉพาะเมื่อ "ต้องการให้คนหลายคนแชร์ข้อมูลกัน" หรือ "ต้องการ security สูง"</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DATABASE ══════════ -->
+<div class="sec" id="s-db">
+  <div class="concept t-db">
+    <div class="concept-head">
+      <div class="concept-emoji bounce">🗄️</div>
+      <div class="concept-intro">
+        <h2>Database (ฐานข้อมูล)</h2>
+        <div class="tagline" style="color:var(--db)">คลังเก็บข้อมูลขนาดใหญ่ที่ค้นหาได้รวดเร็ว</div>
+        <p>Database คือที่เก็บข้อมูลแบบ "มีระบบ" — เก็บข้อมูลผู้ใช้ โพสต์ สินค้า ออเดอร์ ได้เป็นล้านๆ รายการ และค้นหาได้ทันที</p>
+      </div>
+    </div>
+    <div class="concept-body">
+      <div class="analogy">
+        <div class="analogy-icon">📚</div>
+        <div class="analogy-body">
+          <strong>เปรียบเหมือน: ห้องสมุดที่มีบรรณารักษ์</strong>
+          <p>
+            ลองจินตนาการห้องสมุดที่มีหนังสือ 1 ล้านเล่ม — ถ้าหนังสือวางแบบสุ่ม หาหนังสือทีหนึ่งต้องใช้เวลาเป็นปี<br>
+            แต่ถ้ามี <span class="hl">บรรณารักษ์</span> จัดหมวดหมู่ไว้ เมื่อขอ "หนังสือผู้แต่งชื่อสมชาย" ได้ทันที<br>
+            Database คือ "บรรณารักษ์" ที่จัดการข้อมูลให้มีระเบียบ
+          </p>
+        </div>
+      </div>
+
+      <div class="sh">ประเภท Database หลัก</div>
+      <table class="cmp-table">
+        <thead><tr><th>ประเภท</th><th>เปรียบเหมือน</th><th>ตัวอย่าง</th><th>เหมาะกับ</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>SQL (ตาราง)</strong></td>
+            <td>📊 สเปรดชีต Excel</td>
+            <td>PostgreSQL, MySQL, SQLite</td>
+            <td>ข้อมูลมีความสัมพันธ์กัน เช่น ร้านค้า, สั่งซื้อ</td>
+          </tr>
+          <tr>
+            <td><strong>NoSQL (เอกสาร)</strong></td>
+            <td>📁 โฟลเดอร์ JSON</td>
+            <td>MongoDB, Firebase</td>
+            <td>ข้อมูลยืดหยุ่น เช่น โพสต์ โซเชียล, โปรไฟล์ผู้ใช้</td>
+          </tr>
+          <tr>
+            <td><strong>localStorage</strong></td>
+            <td>📒 สมุดโน้ตในเบราว์เซอร์</td>
+            <td>ในตัวเบราว์เซอร์</td>
+            <td>แอพส่วนตัว ไม่ต้องแชร์กับใคร</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sh">SQL ทำงานอย่างไร?</div>
+      <div class="analogy">
+        <div class="analogy-icon">🗣️</div>
+        <div class="analogy-body">
+          <strong>SQL = ภาษาสั่งให้ Database ทำงาน</strong>
+          <p>SQL คือภาษาที่ใช้คุยกับ Database มันอ่านเหมือนภาษาอังกฤษปกติ:</p>
+        </div>
+      </div>
+      <div class="codeblock">
+        <div class="cb-header">
+          <div class="cb-dots"><div class="cb-dot" style="background:#ff6b6b"></div><div class="cb-dot" style="background:#ffd93d"></div><div class="cb-dot" style="background:#6bcb77"></div></div>
+          <div class="cb-lang" style="color:var(--db)">SQL — อ่านออกเสียงได้เลย</div>
+        </div>
+        <div class="cb-body"><cm>-- "ดึงข้อมูล ทุกอย่าง จาก ตาราง users"</cm>
+<kw>SELECT</kw> * <kw>FROM</kw> <fn>users</fn>;
+
+<cm>-- "ดึงข้อมูล ชื่อ อีเมล จาก users ที่ อายุ มากกว่า 18"</cm>
+<kw>SELECT</kw> <fn>name</fn>, <fn>email</fn> <kw>FROM</kw> <fn>users</fn> <kw>WHERE</kw> <fn>age</fn> > <nm>18</nm>;
+
+<cm>-- "เพิ่มข้อมูลใหม่ เข้าไป ใน users"</cm>
+<kw>INSERT INTO</kw> <fn>users</fn> (<fn>name</fn>, <fn>email</fn>) 
+<kw>VALUES</kw> (<st>"สมชาย"</st>, <st>"som@email.com"</st>);
+
+<cm>-- "ลบ จาก users ที่ ไม่มีการใช้งาน"</cm>
+<kw>DELETE FROM</kw> <fn>users</fn> <kw>WHERE</kw> <fn>active</fn> = <vl>false</vl>;</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ API ══════════ -->
+<div class="sec" id="s-api">
+  <div class="concept t-api">
+    <div class="concept-head">
+      <div class="concept-emoji bounce">🔌</div>
+      <div class="concept-intro">
+        <h2>API</h2>
+        <div class="tagline" style="color:var(--api)">Application Programming Interface — ตัวเชื่อมต่อระหว่างแอพ</div>
+        <p>API คือ "ช่องทาง" ที่แอพหนึ่งใช้คุยกับแอพอื่น — เช่น แอพของคุณขอข้อมูลอากาศจาก Weather API หรือโพสต์รูปขึ้น Instagram ผ่าน Instagram API</p>
+      </div>
+    </div>
+    <div class="concept-body">
+      <div class="analogy">
+        <div class="analogy-icon">🍽️</div>
+        <div class="analogy-body">
+          <strong>เปรียบเหมือน: พนักงานเสิร์ฟ</strong>
+          <p>
+            คุณ (แอพ) นั่งที่โต๊ะ → บอก <span class="hl">พนักงานเสิร์ฟ (API)</span> ว่าต้องการอะไร → พนักงานไปบอก <span class="hl">ครัว (Database/Server)</span> → ครัวทำอาหาร → พนักงานนำมาเสิร์ฟ<br><br>
+            คุณไม่ได้เข้าไปในครัวเอง — คุณสื่อสารผ่าน API
+          </p>
+        </div>
+      </div>
+
+      <div class="sh">API ในชีวิตจริง — คุณใช้อยู่ทุกวัน!</div>
+      <div class="info-grid">
+        <div class="info-card" style="border-color:#fce7f3">
+          <div class="ic-icon">🗺️</div>
+          <h3>Google Maps API</h3>
+          <p>Grab ใช้ Google Maps API แสดงแผนที่ในแอพ Grab</p>
+        </div>
+        <div class="info-card" style="border-color:#fce7f3">
+          <div class="ic-icon">💳</div>
+          <h3>Payment API</h3>
+          <p>ร้านค้าออนไลน์ใช้ Omise/Stripe API รับชำระเงินบัตร</p>
+        </div>
+        <div class="info-card" style="border-color:#fce7f3">
+          <div class="ic-icon">☁️</div>
+          <h3>Weather API</h3>
+          <p>แอพสภาพอากาศดึงข้อมูลจาก Weather Service ผ่าน API</p>
+        </div>
+        <div class="info-card" style="border-color:#fce7f3">
+          <div class="ic-icon">🤖</div>
+          <h3>Claude API</h3>
+          <p>แอพของคุณส่งคำถามให้ Claude แล้วรับคำตอบกลับมา</p>
+        </div>
+      </div>
+
+      <div class="sh">API Request ทำงานอย่างไร?</div>
+      <div class="big-flow">
+        <div class="bf-row">
+          <div class="bf-box" style="border-color:var(--api)">
+            <div class="bf-icon">📱</div>
+            <div class="bf-title">แอพของคุณ</div>
+            <div class="bf-sub">ส่ง Request</div>
+          </div>
+          <div class="bf-arrow">→</div>
+          <div class="bf-box" style="border-color:#f9a8d4">
+            <div class="bf-icon">🌐</div>
+            <div class="bf-title">API Endpoint</div>
+            <div class="bf-sub">URL พิเศษ</div>
+          </div>
+          <div class="bf-arrow">→</div>
+          <div class="bf-box" style="border-color:#f9a8d4">
+            <div class="bf-icon">⚙️</div>
+            <div class="bf-title">Server</div>
+            <div class="bf-sub">ประมวลผล</div>
+          </div>
+          <div class="bf-arrow">→</div>
+          <div class="bf-box" style="border-color:#f9a8d4">
+            <div class="bf-icon">📦</div>
+            <div class="bf-title">ข้อมูล JSON</div>
+            <div class="bf-sub">ส่งกลับมา</div>
+          </div>
+          <div class="bf-arrow">→</div>
+          <div class="bf-box" style="border-color:var(--api)">
+            <div class="bf-icon">✨</div>
+            <div class="bf-title">แอพแสดงผล</div>
+            <div class="bf-sub">ให้ผู้ใช้</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="analogy">
+        <div class="analogy-icon">📦</div>
+        <div class="analogy-body">
+          <strong>JSON คืออะไร? — กล่องส่งของมาตรฐาน</strong>
+          <p>เมื่อ API ส่งข้อมูลกลับมา มักส่งในรูป JSON — เหมือนกล่องพัสดุมาตรฐานที่ทุกแอพ "แกะกล่อง" เป็น:<br>
+          <code style="font-family:JetBrains Mono;font-size:12px;background:rgba(219,39,119,.08);color:var(--api);padding:2px 8px;border-radius:4px">{ "name": "สมชาย", "age": 25, "city": "Bangkok" }</code></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DEPLOY ══════════ -->
+<div class="sec" id="s-deploy">
+  <div class="concept t-host">
+    <div class="concept-head">
+      <div class="concept-emoji bounce">🚀</div>
+      <div class="concept-intro">
+        <h2>Hosting & Deploy</h2>
+        <div class="tagline" style="color:var(--host)">ทำให้คนทั้งโลกเข้าแอพของคุณได้</div>
+        <p>Deploy คือการ "เอาแอพขึ้น server" เพื่อให้ใครก็ได้เข้าถึงได้จาก URL — แทนที่จะรันได้แค่บนเครื่องของคุณ</p>
+      </div>
+    </div>
+    <div class="concept-body">
+      <div class="analogy">
+        <div class="analogy-icon">🏠</div>
+        <div class="analogy-body">
+          <strong>เปรียบเหมือน: เปิดร้านอาหาร</strong>
+          <p>
+            ถ้าคุณทำอาหารอร่อยมาก แต่ทำกินแค่ที่บ้าน ไม่มีใครรู้<br>
+            <span class="hl">Deploy = เช่าพื้นที่เปิดร้าน</span> ที่คนอื่นมากินได้<br>
+            Hosting = เจ้าของอาคารที่ให้เช่าพื้นที่ (Netlify, Vercel, ฯลฯ)<br>
+            Domain = ป้ายชื่อร้าน (myapp.com)
+          </p>
+        </div>
+      </div>
+
+      <div class="sh">คำศัพท์ที่ต้องรู้</div>
+      <div class="seq">
+        <div class="seq-item">
+          <div class="seq-n" style="background:#ccfbf1;color:var(--host)">🌐</div>
+          <div>
+            <strong>Domain (โดเมน) = ที่อยู่ของแอพ</strong>
+            <p>เหมือนเลขบ้าน เช่น myshop.com หรือ myapp.netlify.app — ที่คนพิมพ์เพื่อเข้าแอพคุณ ซื้อจาก GoDaddy, Namecheap ราคาประมาณ 200-500 บาท/ปี</p>
+          </div>
+        </div>
+        <div class="seq-item">
+          <div class="seq-n" style="background:#ccfbf1;color:var(--host)">🏢</div>
+          <div>
+            <strong>Hosting (โฮสติ้ง) = คอมพิวเตอร์ที่เก็บไฟล์แอพ</strong>
+            <p>เหมือนพื้นที่เช่า — เอาไฟล์แอพไปไว้ที่นั่น Server ของ Hosting จะรันแอพตลอด 24 ชั่วโมง ผู้ใช้เข้าได้ทุกเมื่อ</p>
+          </div>
+        </div>
+        <div class="seq-item">
+          <div class="seq-n" style="background:#ccfbf1;color:var(--host)">🔒</div>
+          <div>
+            <strong>HTTPS = ระบบป้องกัน (ต้องมี!)</strong>
+            <p>เหมือนซองจดหมายปิดสนิท ข้อมูลที่รับส่งระหว่างผู้ใช้กับแอพถูกเข้ารหัส ป้องกันคนกลางดักอ่าน — Netlify/Vercel/GitHub Pages ให้ฟรีโดยอัตโนมัติ</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sh">เปรียบเทียบ Platform ฟรีสำหรับเริ่มต้น</div>
+      <table class="cmp-table">
+        <thead><tr><th>Platform</th><th>เหมาะกับ</th><th>ความยาก</th><th>ราคา</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Netlify</strong></td>
+            <td>HTML/React ไฟล์เดียว</td>
+            <td>⭐ ลากวางได้เลย</td>
+            <td>ฟรี</td>
+          </tr>
+          <tr>
+            <td><strong>Vercel</strong></td>
+            <td>Next.js, React</td>
+            <td>⭐⭐ เชื่อม GitHub</td>
+            <td>ฟรี</td>
+          </tr>
+          <tr>
+            <td><strong>GitHub Pages</strong></td>
+            <td>HTML static</td>
+            <td>⭐⭐ ต้องมี GitHub</td>
+            <td>ฟรี</td>
+          </tr>
+          <tr>
+            <td><strong>Streamlit Cloud</strong></td>
+            <td>Python Streamlit</td>
+            <td>⭐⭐ เชื่อม GitHub</td>
+            <td>ฟรี</td>
+          </tr>
+          <tr>
+            <td><strong>Render</strong></td>
+            <td>Python/Node Backend</td>
+            <td>⭐⭐⭐ ต้องตั้งค่า</td>
+            <td>ฟรี (จำกัด)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="note note-green">
+        <div class="note-i">🎯</div>
+        <div class="note-b">
+          <strong>เริ่มต้นแนะนำ: Netlify</strong>
+          <p>ไม่ต้องสมัคร GitHub ไม่ต้องรู้ command line — แค่ไปที่ netlify.com สมัคร account แล้ว drag-and-drop โฟลเดอร์ที่มีไฟล์ index.html ลงไป ได้ URL ทันทีใน 30 วินาที</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ QUIZ ══════════ -->
+<div class="sec" id="s-quiz">
+  <div class="concept" style="border-color:var(--border);background:#fff">
+    <div class="concept-head" style="background:linear-gradient(135deg,#f8f4ff,#fff)">
+      <div class="concept-emoji bounce">🧠</div>
+      <div class="concept-intro">
+        <h2>ทดสอบความเข้าใจ</h2>
+        <div class="tagline" style="color:#7c3aed">เช็คว่าเข้าใจแล้วหรือยัง — ไม่มีผ่านไม่ผ่าน แค่ทบทวน</div>
+        <p>ลองตอบให้หมดทุกข้อ คลิกคำตอบที่คิดว่าถูกต้อง จะบอกทันทีว่าถูกหรือผิด</p>
+      </div>
+    </div>
+    <div class="concept-body">
+
+      <div id="q1" class="quiz-box">
+        <div class="quiz-q">1. ถ้าอยากให้ปุ่มในเว็บสีเขียว ต้องใช้อะไร?</div>
+        <div class="quiz-options">
+          <button class="qopt" onclick="answer('q1','a','b')">🏗️ HTML</button>
+          <button class="qopt" onclick="answer('q1','b','b')">🎨 CSS</button>
+          <button class="qopt" onclick="answer('q1','c','b')">⚡ JavaScript</button>
+          <button class="qopt" onclick="answer('q1','d','b')">🗄️ Database</button>
+        </div>
+        <div class="quiz-feedback" id="q1-fb"></div>
+      </div>
+
+      <div id="q2" class="quiz-box">
+        <div class="quiz-q">2. เว็บแอพมี "ระบบ Login" ที่ตรวจรหัสผ่านจริงๆ ต้องใช้อะไร?</div>
+        <div class="quiz-options">
+          <button class="qopt" onclick="answer('q2','a','c')">🌐 แค่ HTML</button>
+          <button class="qopt" onclick="answer('q2','b','c')">🎨 แค่ CSS</button>
+          <button class="qopt" onclick="answer('q2','c','c')">🖥️ Backend + Database</button>
+          <button class="qopt" onclick="answer('q2','d','c')">📱 React</button>
+        </div>
+        <div class="quiz-feedback" id="q2-fb"></div>
+      </div>
+
+      <div id="q3" class="quiz-box">
+        <div class="quiz-q">3. localStorage ต่างจาก Database ยังไง?</div>
+        <div class="quiz-options">
+          <button class="qopt" onclick="answer('q3','a','a')">localStorage อยู่ในเบราว์เซอร์ผู้ใช้คนนั้น, Database อยู่บน Server แชร์ได้ทุกคน</button>
+          <button class="qopt" onclick="answer('q3','b','a')">localStorage เร็วกว่า Database มาก</button>
+          <button class="qopt" onclick="answer('q3','c','a')">localStorage เก็บได้มากกว่า</button>
+          <button class="qopt" onclick="answer('q3','d','a')">ไม่ต่างกันเลย</button>
+        </div>
+        <div class="quiz-feedback" id="q3-fb"></div>
+      </div>
+
+      <div id="q4" class="quiz-box">
+        <div class="quiz-q">4. API เปรียบเหมือนอะไร?</div>
+        <div class="quiz-options">
+          <button class="qopt" onclick="answer('q4','a','b')">🧱 โครงสร้างบ้าน</button>
+          <button class="qopt" onclick="answer('q4','b','b')">🍽️ พนักงานเสิร์ฟที่รับออเดอร์ระหว่างลูกค้ากับครัว</button>
+          <button class="qopt" onclick="answer('q4','c','b')">💄 ช่างแต่งหน้า</button>
+          <button class="qopt" onclick="answer('q4','d','b')">📚 ห้องสมุด</button>
+        </div>
+        <div class="quiz-feedback" id="q4-fb"></div>
+      </div>
+
+      <div id="q5" class="quiz-box">
+        <div class="quiz-q">5. ต้องการสร้างแอพ Calculator ส่วนตัวใช้คนเดียว ต้องใช้เทคโนโลยีอะไรบ้าง?</div>
+        <div class="quiz-options">
+          <button class="qopt" onclick="answer('q5','a','a')">HTML + CSS + JavaScript (ไม่ต้อง Backend หรือ Database)</button>
+          <button class="qopt" onclick="answer('q5','b','a')">ต้องมี Database เก็บตัวเลข</button>
+          <button class="qopt" onclick="answer('q5','c','a')">ต้องมี Backend Server</button>
+          <button class="qopt" onclick="answer('q5','d','a')">ต้องใช้ React เท่านั้น</button>
+        </div>
+        <div class="quiz-feedback" id="q5-fb"></div>
+      </div>
+
+      <div id="q6" class="quiz-box">
+        <div class="quiz-q">6. "Deploy" คืออะไร?</div>
+        <div class="quiz-options">
+          <button class="qopt" onclick="answer('q6','a','c')">เขียนโค้ดแอพ</button>
+          <button class="qopt" onclick="answer('q6','b','c')">ออกแบบ UI</button>
+          <button class="qopt" onclick="answer('q6','c','c')">เอาแอพขึ้น Server ให้คนอื่นเข้าได้</button>
+          <button class="qopt" onclick="answer('q6','d','c')">ทดสอบ Bug</button>
+        </div>
+        <div class="quiz-feedback" id="q6-fb"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+// Progress bar
+window.addEventListener('scroll', () => {
+  const h = document.body.scrollHeight - window.innerHeight;
+  document.getElementById('pb').style.width = (window.scrollY / h * 100) + '%';
+});
+
+// Tab switching
+function show(id, btn) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.ntab, .qs').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  window.scrollTo({ top: document.querySelector('.nav').offsetTop - 10, behavior: 'smooth' });
+}
+
+// Quiz logic
+const answers = {
+  q1: { correct: 'b', explanation: '✅ ถูกต้อง! CSS คือภาษาที่จัดการสีและหน้าตา — color: green; นั่นเอง' },
+  q2: { correct: 'c', explanation: '✅ ถูกต้อง! การตรวจ password ต้องทำบน Backend เพื่อความปลอดภัย ไม่ควรทำใน Frontend ที่คนดูโค้ดได้' },
+  q3: { correct: 'a', explanation: '✅ ถูกต้อง! localStorage เก็บเฉพาะในเบราว์เซอร์คนนั้น เปิดคอมอีกเครื่องข้อมูลหาย แต่ Database อยู่บน Server ใครก็เข้าถึงได้' },
+  q4: { correct: 'b', explanation: '✅ ถูกต้อง! API เป็นตัวกลางรับ-ส่งข้อมูลระหว่างแอพกับ Server เหมือนพนักงานเสิร์ฟ' },
+  q5: { correct: 'a', explanation: '✅ ถูกต้อง! Calculator ที่ใช้คนเดียวไม่ต้องเก็บข้อมูลข้ามเครื่อง แค่ HTML + CSS + JS ก็พอ' },
+  q6: { correct: 'c', explanation: '✅ ถูกต้อง! Deploy คือการนำแอพขึ้น Server เพื่อให้ URL ที่คนอื่นเข้าได้ เหมือนการเปิดร้านให้ลูกค้ามา' }
+};
+
+const wrong_msgs = {
+  q1: '❌ ยังไม่ใช่ — HTML สร้างโครงสร้าง, JS ทำให้มีการทำงาน แต่ถ้าอยากให้ "สวย" ต้องใช้ CSS',
+  q2: '❌ ยังไม่ใช่ — Login ที่ปลอดภัยต้องตรวจบน Backend ไม่ใช่ Frontend ที่คนอื่นดูโค้ดได้',
+  q3: '❌ ยังไม่ใช่ — ความต่างหลักคือ localStorage อยู่ในเบราว์เซอร์ผู้ใช้คนนั้น ไม่สามารถแชร์ข้ามคนได้',
+  q4: '❌ ยังไม่ใช่ — API เป็น "ตัวกลาง" ที่ส่งข้อมูลระหว่างแอพ เหมือนคนรับออเดอร์',
+  q5: '❌ ยังไม่ใช่ — แอพง่ายๆ ใช้คนเดียวไม่ต้องมี Backend หรือ Database ที่ซับซ้อน',
+  q6: '❌ ยังไม่ใช่ — Deploy หมายถึงการนำแอพขึ้น Server ให้คนอื่นเข้าได้ผ่าน URL'
+};
+
+function answer(qId, chosen, correct) {
+  const box = document.getElementById(qId);
+  if (box.dataset.answered) return;
+  box.dataset.answered = '1';
+  
+  const opts = box.querySelectorAll('.qopt');
+  const letters = ['a','b','c','d'];
+  opts.forEach((o, i) => {
+    o.disabled = true;
+    if (letters[i] === correct) o.classList.add('correct');
+    else if (letters[i] === chosen && chosen !== correct) o.classList.add('wrong');
+  });
+  
+  const fb = document.getElementById(qId + '-fb');
+  fb.classList.add('show');
+  if (chosen === correct) {
+    fb.className = 'quiz-feedback show qf-correct';
+    fb.textContent = answers[qId].explanation;
+  } else {
+    fb.className = 'quiz-feedback show qf-wrong';
+    fb.textContent = wrong_msgs[qId];
+  }
+}
+</script>
+</body>
+</html>
